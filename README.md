@@ -1,14 +1,15 @@
 # Golang Modules 使用說明
 
-本專案包含三個基於 Golang + Wails 的模組專案：**custom-script**、**db-sqlite**、**db-postgres**。每個專案皆可獨立運作，也可作為大型跨平台應用的模組範本。
+本專案包含四個基於 Golang + Wails 的模組專案：**custom-script**、**db-sqlite**、**db-mysql**、**db-postgres**。每個專案皆可獨立運作，也可作為大型跨平台應用的模組範本。
 
 ## 📦 專案概述
 
-這三個模組展示了使用 Wails v2 框架開發跨平台桌面應用的不同場景：
+這四個模組展示了使用 Wails v2 框架開發跨平台桌面應用的不同場景：
 
-- **custom-script**: 執行自訂腳本並顯示建置進度的應用
-- **db-sqlite**: 使用 SQLite 資料庫的 CRUD 操作範例
-- **db-postgres**: 使用 PostgreSQL 資料庫的企業級應用範例
+- **custom-script**: 執行自訂bash/bat腳本並顯示建置進度的應用
+- **db-sqlite**: 使用 SQLite 資料庫的 CRUD 操作與資料庫遷移 (database migration) 管理範例
+- **db-mysql**: 使用 MySQL 資料庫的 CRUD 操作與資料庫遷移 (database migration) 管理範例
+- **db-postgres**: 使用 PostgreSQL 資料庫的 CRUD 操作與資料庫遷移 (database migration) 管理範例
 
 ## 🚀 快速開始
 
@@ -17,6 +18,7 @@
 - **Go 1.23+** 或更高版本
 - **Node.js 16+** 和 npm
 - **Wails CLI** (`go install github.com/wailsapp/wails/v2/cmd/wails@latest`)
+- **MySQL 8.0+**（僅 db-mysql 模組需要）
 - **PostgreSQL 12+**（僅 db-postgres 模組需要）
 
 ### 安裝 Wails CLI
@@ -31,7 +33,7 @@ go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
 ```bash
 # 進入想要使用的模組目錄
-cd custom-script    # 或 db-sqlite 或 db-postgres
+cd custom-script    # 或 db-sqlite 或 db-mysql 或 db-postgres
 
 # 安裝前端依賴
 cd frontend
@@ -98,6 +100,26 @@ wails build
 
 **詳細文檔：** 請參考 [db-postgres/README.md](db-postgres/README.md)
 
+### 4. db-mysql
+
+**功能特色：**
+- ✅ 完整的 CRUD 操作
+- ✅ 分頁查詢和搜尋功能
+- ✅ 資料庫遷移管理（golang-migrate）
+- ✅ 環境變數管理（.env 支援）
+- ✅ Docker Compose 支援
+- ✅ 完整的錯誤處理和日誌記錄
+- ✅ 跨平台支援（Windows、macOS、Linux）
+- ✅ Singleton 模式：確保資料庫實例的唯一性和線程安全
+
+**使用場景：**
+- 企業級桌面應用
+- 需要多用戶協作的應用
+- 需要複雜資料庫操作的應用
+- 使用 MySQL 作為後端資料庫的應用
+
+**詳細文檔：** 請參考 [db-mysql/README.md](db-mysql/README.md)
+
 ## 🛠️ 技術架構
 
 ### 後端技術
@@ -105,9 +127,11 @@ wails build
 - **Go 1.23+**: 主要程式語言
 - **Wails v2**: 跨平台桌面應用框架
 - **SQLite3**: 輕量級資料庫（db-sqlite）
+- **MySQL 8.0+**: 企業級關聯式資料庫（db-mysql）
 - **PostgreSQL**: 企業級關聯式資料庫（db-postgres）
-- **golang-migrate**: 資料庫遷移工具（db-postgres）
-- **joho/godotenv**: 環境變數管理（db-postgres）
+- **golang-migrate**: 資料庫遷移工具（db-mysql、db-postgres）
+- **go-sql-driver/mysql**: MySQL 驅動（db-mysql）
+- **joho/godotenv**: 環境變數管理（db-mysql、db-postgres）
 
 ### 前端技術
 
@@ -149,6 +173,18 @@ wails build -platform linux/amd64
 
 ## 🔧 環境配置
 
+### db-mysql 環境變數
+
+如果使用 db-mysql 模組，需要配置 `.env` 檔案：
+
+```env
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=user
+DB_PASSWORD=your_password
+DB_NAME=mydb
+```
+
 ### db-postgres 環境變數
 
 如果使用 db-postgres 模組，需要配置 `.env` 檔案：
@@ -162,8 +198,15 @@ DB_NAME=mydb
 DB_SSLMODE=disable
 ```
 
-### 使用 Docker Compose（db-postgres）
+### 使用 Docker Compose
 
+**db-mysql:**
+```bash
+cd db-mysql
+docker-compose up -d
+```
+
+**db-postgres:**
 ```bash
 cd db-postgres
 docker-compose up -d
