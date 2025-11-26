@@ -1,15 +1,16 @@
 # Golang Modules 使用說明
 
-本專案包含四個基於 Golang + Wails 的模組專案：**custom-script**、**db-sqlite**、**db-mysql**、**db-postgres**。每個專案皆可獨立運作，也可作為大型跨平台應用的模組範本。
+本專案包含五個基於 Golang + Wails 的模組專案：**custom-script**、**db-sqlite**、**db-mysql**、**db-postgres**、**db-mongo**。每個專案皆可獨立運作，也可作為大型跨平台應用的模組範本。
 
 ## 📦 專案概述
 
-這四個模組展示了使用 Wails v2 框架開發跨平台桌面應用的不同場景：
+這些模組展示了使用 Wails v2 框架開發跨平台桌面應用的不同場景：
 
 - **custom-script**: 執行自訂bash/bat腳本並顯示建置進度的應用
 - **db-sqlite**: 使用 SQLite 資料庫的 CRUD 操作與資料庫遷移 (database migration) 管理範例
 - **db-mysql**: 使用 MySQL 資料庫的 CRUD 操作與資料庫遷移 (database migration) 管理範例
 - **db-postgres**: 使用 PostgreSQL 資料庫的 CRUD 操作與資料庫遷移 (database migration) 管理範例
+- **db-mongo**: 使用 MongoDB 的 NoSQL CRUD、索引與資料遷移管理範例
 
 ## 🚀 快速開始
 
@@ -20,6 +21,7 @@
 - **Wails CLI** (`go install github.com/wailsapp/wails/v2/cmd/wails@latest`)
 - **MySQL 8.0+**（僅 db-mysql 模組需要）
 - **PostgreSQL 12+**（僅 db-postgres 模組需要）
+- **MongoDB 4.4+**（僅 db-mongo 模組需要）
 
 ### 安裝 Wails CLI
 
@@ -33,7 +35,7 @@ go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
 ```bash
 # 進入想要使用的模組目錄
-cd custom-script    # 或 db-sqlite 或 db-mysql 或 db-postgres
+cd custom-script    # 或 db-sqlite / db-mysql / db-postgres / db-mongo
 
 # 安裝前端依賴
 cd frontend
@@ -120,6 +122,24 @@ wails build
 
 **詳細文檔：** 請參考 [db-mysql/README.md](db-mysql/README.md)
 
+### 5. db-mongo
+
+**功能特色：**
+- ✅ 完整的 CRUD 操作（含 ObjectID 轉換）
+- ✅ 分頁與搜尋功能（支援正則搜尋姓名、Email）
+- ✅ 自訂資料庫遷移與索引管理（集合、唯一索引、查詢索引）
+- ✅ 環境變數管理（.env 支援）
+- ✅ Docker Compose 一鍵啟動 MongoDB（含預設帳密）
+- ✅ 完整錯誤處理、日誌記錄與 Singleton 連線管理
+- ✅ 跨平台支援（Windows、macOS、Linux）
+
+**使用場景：**
+- 需要彈性 Schema 的桌面應用
+- 需要快速疊代的文件型資料模型
+- 需同時處理大量資料與搜尋的桌面工具
+
+**詳細文檔：** 請參考 [db-mongo/README.md](db-mongo/README.md)
+
 ## 🛠️ 技術架構
 
 ### 後端技術
@@ -129,9 +149,12 @@ wails build
 - **SQLite3**: 輕量級資料庫（db-sqlite）
 - **MySQL 8.0+**: 企業級關聯式資料庫（db-mysql）
 - **PostgreSQL**: 企業級關聯式資料庫（db-postgres）
+- **MongoDB 4.4+**: 文件型資料庫（db-mongo）
 - **golang-migrate**: 資料庫遷移工具（db-mysql、db-postgres）
+- **自訂 Mongo 遷移系統**：集合與索引版本管理（db-mongo）
 - **go-sql-driver/mysql**: MySQL 驅動（db-mysql）
-- **joho/godotenv**: 環境變數管理（db-mysql、db-postgres）
+- **mongo-driver**: MongoDB 官方 Go 驅動（db-mongo）
+- **joho/godotenv**: 環境變數管理（db-mysql、db-postgres、db-mongo）
 
 ### 前端技術
 
@@ -198,6 +221,19 @@ DB_NAME=mydb
 DB_SSLMODE=disable
 ```
 
+### db-mongo 環境變數
+
+如果使用 db-mongo 模組，需要配置 `.env` 檔案：
+
+```env
+DB_HOST=localhost
+DB_PORT=27017
+DB_USER=admin
+DB_PASSWORD=admin
+DB_NAME=mydb
+DB_AUTH_SOURCE=admin
+```
+
 ### 使用 Docker Compose
 
 **db-mysql:**
@@ -209,6 +245,12 @@ docker-compose up -d
 **db-postgres:**
 ```bash
 cd db-postgres
+docker-compose up -d
+```
+
+**db-mongo:**
+```bash
+cd db-mongo
 docker-compose up -d
 ```
 
