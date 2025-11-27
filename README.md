@@ -1,6 +1,6 @@
 # Golang Modules 使用說明
 
-本專案包含五個基於 Golang + Wails 的模組專案：**custom-script**、**db-sqlite**、**db-mysql**、**db-postgres**、**db-mongo**。每個專案皆可獨立運作，也可作為大型跨平台應用的模組範本。
+本專案包含六個基於 Golang + Wails 的模組專案：**custom-script**、**db-sqlite**、**db-mysql**、**db-postgres**、**db-mongo**、**rabbitmq-mqtt-amqp**。每個專案皆可獨立運作，也可作為大型跨平台應用的模組範本。
 
 ## 📦 專案概述
 
@@ -11,6 +11,7 @@
 - **db-mysql**: 使用 MySQL 資料庫的 CRUD 操作與資料庫遷移 (database migration) 管理範例
 - **db-postgres**: 使用 PostgreSQL 資料庫的 CRUD 操作與資料庫遷移 (database migration) 管理範例
 - **db-mongo**: 使用 MongoDB 的 NoSQL CRUD、索引與資料遷移管理範例
+- **rabbitmq-mqtt-amqp**: 將 RabbitMQ (AMQP + MQTT) 整合於同一 Wails App，並提供純 Go Host/Client 範例
 
 ## 🚀 快速開始
 
@@ -22,6 +23,7 @@
 - **MySQL 8.0+**（僅 db-mysql 模組需要）
 - **PostgreSQL 12+**（僅 db-postgres 模組需要）
 - **MongoDB 4.4+**（僅 db-mongo 模組需要）
+- **RabbitMQ 3.12+**（僅 rabbitmq-mqtt-amqp 模組需要）
 
 ### 安裝 Wails CLI
 
@@ -35,7 +37,7 @@ go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
 ```bash
 # 進入想要使用的模組目錄
-cd custom-script    # 或 db-sqlite / db-mysql / db-postgres / db-mongo
+cd custom-script    # 或 db-sqlite / db-mysql / db-postgres / db-mongo / rabbitmq-mqtt-amqp
 
 # 安裝前端依賴
 cd frontend
@@ -140,6 +142,22 @@ wails build
 
 **詳細文檔：** 請參考 [db-mongo/README.md](db-mongo/README.md)
 
+### 6. rabbitmq-mqtt-amqp
+
+**功能特色：**
+- ✅ 內建單一 UI 切換 MQTT / AMQP 測試流程（共用 Wails App）
+- ✅ 附純 Go Host / Client 範例（examples/host、examples/client）
+- ✅ Docker Compose 一鍵啟動啟用 MQTT 插件的 RabbitMQ Broker
+- ✅ 具備管理端口、WebSocket MQTT、帳號密碼預設值
+- ✅ 前端提供即時訊息記錄與協定選擇元件
+
+**使用場景：**
+- 需要同時驗證 AMQP 與 MQTT 的桌面工具
+- 內部教學或 PoC，演示訊息佇列與物聯網協定
+- 專案初期整合 RabbitMQ 並快速驗證通訊流程
+
+**詳細文檔：** 請參考 [rabbitmq-mqtt-amqp/README.md](rabbitmq-mqtt-amqp/README.md)
+
 ## 🛠️ 技術架構
 
 ### 後端技術
@@ -150,6 +168,7 @@ wails build
 - **MySQL 8.0+**: 企業級關聯式資料庫（db-mysql）
 - **PostgreSQL**: 企業級關聯式資料庫（db-postgres）
 - **MongoDB 4.4+**: 文件型資料庫（db-mongo）
+- **RabbitMQ 3.12+**: 訊息佇列（rabbitmq-mqtt-amqp，AMQP + MQTT）
 - **golang-migrate**: 資料庫遷移工具（db-mysql、db-postgres）
 - **自訂 Mongo 遷移系統**：集合與索引版本管理（db-mongo）
 - **go-sql-driver/mysql**: MySQL 驅動（db-mysql）
@@ -252,6 +271,12 @@ docker-compose up -d
 ```bash
 cd db-mongo
 docker-compose up -d
+```
+
+**rabbitmq-mqtt-amqp:**
+```bash
+cd rabbitmq-mqtt-amqp
+docker compose up -d
 ```
 
 ## 📚 學習資源
